@@ -1,0 +1,16 @@
+# Local settings and secrets
+/config/*.local.php
+.env
+.env.*
+!.env.example
+# Generated files
+/var/
+/vendor/
+*.log
+*.zip
+*.rar
+*.bak
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

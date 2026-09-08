@@ -65,4 +65,3 @@ A versão deste repositório contém o fluxo de compra reformulado. O painel adm
 Antes de transformar em loja real: implementar gateway de pagamentos, frete real, controle de estoque concorrente, proteção contra tentativas repetidas de login, recuperação de senha e revisão de segurança completa. Validação atual de CPF verifica somente o formato de 11 dígitos, não titularidade ou dígitos verificadores.
 
 As fotos e marcas vieram do arquivo acadêmico original. Consulte [origem e direitos](docs/RECURSOS.md); nenhuma licença de terceiros é presumida. Não foi adicionada uma licença de redistribuição em seu nome.
-

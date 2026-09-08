@@ -1,0 +1,39 @@
+name: PHP and checkout checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: local_test_only
+          MYSQL_DATABASE: dlstore_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -plocal_test_only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: local_test_only
+      DB_NAME: dlstore_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check PHP extension and syntax
+        run: |
+          php -r 'exit(extension_loaded("mysqli") ? 0 : 1);'
+          find public src config -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Import clean schema
+        run: mysql -h 127.0.0.1 -u root -plocal_test_only dlstore_test < database/schema.sql
+      - name: Exercise checkout
+        run: |
+          php -S 127.0.0.1:8080 -t public > /tmp/dlstore.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/ > /dev/null && break || sleep 1; done
+          python3 tests/smoke.py http://127.0.0.1:8080
